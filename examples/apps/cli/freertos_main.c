@@ -69,8 +69,7 @@ static TaskHandle_t BLEAPPTaskHandle;
 #include <bget.h>
 #define TOTAL_ICALL_HEAP_SIZE (0xf700)
 
-
-__attribute__((section(".heap"))) uint8_t GlobalHeapZoneBuffer[TOTAL_ICALL_HEAP_SIZE];
+__attribute__((section(".heap"))) uint8_t ucHeap[TOTAL_ICALL_HEAP_SIZE];
 uint32_t heapSize = TOTAL_ICALL_HEAP_SIZE;
 
 void vApplicationStackOverflowHook(void)
@@ -90,7 +89,7 @@ void vTaskCode(void *pvParameters)
 int main(void)
 {
     Board_init();
-    bpool((void *) GlobalHeapZoneBuffer, TOTAL_ICALL_HEAP_SIZE);
+    bpool((void *) ucHeap, TOTAL_ICALL_HEAP_SIZE);
 
     GPIO_init();
 

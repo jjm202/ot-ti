@@ -57,7 +57,7 @@
 #if defined(DeviceFamily_CC13X2_CC26X2) \
     || defined(DeviceFamily_CC13X2) \
     || defined(DeviceFamily_CC26X2)
-#define configTOTAL_HEAP_SIZE ((size_t)(0x4000))
+#define configTOTAL_HEAP_SIZE ((size_t)(0))
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 #elif defined(DeviceFamily_CC13X2X7_CC26X2X7) \
@@ -125,6 +125,7 @@
 
 /* Required by TI driver implementations */
 #define configSUPPORT_STATIC_ALLOCATION 1
+#define configAPPLICATION_ALLOCATED_HEAP 1
 
 /* Constants that build features in or out. */
 #define configUSE_MUTEXES 1
