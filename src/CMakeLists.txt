@@ -81,33 +81,39 @@ if(TI_SIMPLELINK_KERNEL STREQUAL "freertos")
         ${PROJECT_SOURCE_DIR}/src
 
         # BLE (cont)
-        ${TI_SIMPLELINK_SDK_DIR}/kernel/tirtos7/packages
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/drivers/dpl
         ${TI_SIMPLELINK_SDK_DIR}/source
         ${TI_SIMPLELINK_SDK_DIR}/source/ti
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/npi/stack/
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/rcosc
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/controller/cc26xx/inc
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/hal/src/inc
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/hal/src/target/_common
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/heapmgr
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/inc
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/inc
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/inc
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/npi/src/
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/npi/src/inc
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/osal/src/inc
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/rom
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/common/cc26xx
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/inc
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/hal/src/target/_common
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/npi/stack/
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/hal/src/inc
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/heapmgr
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/dev_info
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/simple_profile
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/rom
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/inc
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/npi/src/
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/osal/src/inc
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/services/src/saddr
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/services/src/sdata
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/common/cc26xx
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/common/nv
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src
+        ${TI_SIMPLELINK_SDK_DIR}/kernel/tirtos7/packages
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/devices/cc13x4_cc26x4
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack/common/cc26xx/freertos
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/posix/gcc
+
+        ${TI_SIMPLELINK_SDK_DIR}/kernel/freertos
+        ${TI_SIMPLELINK_SDK_DIR}/kernel
+
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/rcosc
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/npi/src/inc
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack/common/cc26xx/freertos
     )
 
     # JJM - setup the source files required for DMM builds 
@@ -119,20 +125,44 @@ if(TI_SIMPLELINK_KERNEL STREQUAL "freertos")
 
     # JJM - setup the source files for BLE
     set(BLE_OUTPUT_C
-        # JJM - mirror simple peripheral iCall folder
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/icall_cc2650.c
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/icall_user_config.c
+        # basic ble common/BLEAppUtil
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/ble_app_util/src/bleapputil_init.c
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/ble_app_util/src/bleapputil_process.c
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/ble_app_util/src/bleapputil_stack_callbacks.c
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/ble_app_util/src/bleapputil_task.c
+
+        # basic ble common/iCall
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/icall_POSIX.c
 
-        # JJM - mirror simple peripheral iCallBLE folder 
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/stack/ble_user_config_stack.c
+	# basic ble common/iCallBLE
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/ble_stack_api.c
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/ble_user_config.c
         ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/icall_api_lite.c
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/icall_hci_tl.c 
+
+	# basic ble common/Profiles/simple_gatt
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/profiles/simple_gatt/simple_gatt_profile.c
+
+	# basic ble common/Service/dev_info
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/services/dev_info/dev_info_service.c
+
+	# basic ble common/Startup
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/stack/ble_user_config_stack.c
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/bleapp/profiles/simple_gatt/simple_gatt_profile.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/rom/agama_r1/rom_init.c
+
+	# basic ble iCall
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/icall_cc2650.c
+        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/src/icall_user_config.c
+
+        # JJM - mirror simple peripheral iCallBLE folder
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/stack/ble_user_config_stack.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/ble_user_config.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/icall_api_lite.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/icall/app/icall_hci_tl.c
 
         # JJM - mirror the simple peripheral Profiles folder
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/dev_info/cc26xx/devinfoservice.c
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/simple_profile/cc26xx/simple_gatt_profile.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/dev_info/cc26xx/devinfoservice.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/profiles/simple_profile/cc26xx/simple_gatt_profile.c
     )
 
     set(SYSCONFIG_OUTPUT_OTHER
@@ -146,7 +176,7 @@ if(TI_SIMPLELINK_KERNEL STREQUAL "freertos")
 
         # mirrors the simple-peripheral Startup folder
         # JJM - cannot get this to link for stack_main() 
-        ${TI_SIMPLELINK_SDK_DIR}/source/ti/dmm/apps/common/ble_remote_display/stack/osal_icall_ble.c
+        #${TI_SIMPLELINK_SDK_DIR}/source/ti/dmm/apps/common/ble_remote_display/stack/osal_icall_ble.c
     )
     set(GENLIBS_INCLUDES
         -L${TI_SIMPLELINK_SDK_DIR}/source
@@ -261,13 +291,25 @@ set(USR_COMPILE_DEFINITIONS
     "OSAL_CBTIMER_NUM_TASKS=1"
     "ONE_BLE_LIB_SIZE_OPTIMIZATION"
 
-    # the following are from ti_build_config.opt 
+    # the following are from ti_build_config.opt
     "HOST_CONFIG=PERIPHERAL_CFG"
     "USE_AE"
     "GAP_BOND_MGR"
     "HCI_TL_NONE"
     "FREERTOS"
+
+    # from basic_ble_LP_EM_CC1354P10_1_freertos_ticlang
+    "ICALL_NO_APP_EVENTS"
+    "UARTLOG_ENABLE"
+    "uartlog_FILE=0"
+    "DeviceFamily_CC13X4"
+    "FLASH_ONLY_BUILD"
+    "NVOCMP_NWSAMEITEM=1"
+    "EM_CC1354P10_1_LP"
+    "NVOCMP_POSIX_MUTEX"
 )
+
+set(APPEND CMAKE_C_FLAGS -std=c99)
 
 target_compile_definitions(openthread-cc13xx_cc26xx
     PUBLIC

@@ -43,14 +43,13 @@
 #include <ti/drivers/ECDSA.h>
 #include <ti/drivers/SHA2.h>
 
-//#include <icall.h>
-#include "bleAppTask.h"
+#include <icall.h>
+#include "bcomdef.h"
 #include <portmacro.h>
 
 #ifndef USE_DEFAULT_USER_CFG
 #include "ble_user_config.h"
-#include <icall.h>
-
+#include "ble_stack_api.h"
 // BLE user defined configuration
 icall_userCfg_t user0Cfg = BLE_USER_CFG;
 #endif // USE_DEFAULT_USER_CFG
@@ -106,7 +105,7 @@ int main(void)
     user0Cfg.appServiceInfo->timerTickPeriod     = ICall_getTickPeriod();
     user0Cfg.appServiceInfo->timerMaxMillisecond = ICall_getMaxMSecs();
 
-#if 1
+#if 0
     /* Initialize ICall module */
     ICall_init();
 
@@ -121,7 +120,7 @@ int main(void)
             ;
     }
 
-    bleAppTask_init();
+    //bleAppTask_init();
     vTaskStartScheduler();
 
     // Should never get here.
