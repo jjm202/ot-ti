@@ -408,86 +408,90 @@ void bleAppTask_init()
 
 static void BleMain(void * pvParameter)
 {
-	//Initialize ble application
-	bleStack_init();
+  //Initialize ble application
+  bleStack_init();
 
-	//ble application main loop
-	for (;;)
-	{
-		/* main loop for BleMain functionalities */
-        {
-    		uint32_t events;
-
-    // Waits for an event to be posted associated with the calling thread.
-    // Note that an event associated with a thread is posted when a
-    // message is queued to the message receive queue of the thread
-
-	//Wei
-	mq_receive(syncEvent, (char*)&events, sizeof(uint32_t), NULL);
-    //events = Event_pend(syncEvent, Event_Id_NONE, SP_ALL_EVENTS,
-     //                   ICALL_TIMEOUT_FOREVER);
-
-    if (events)
+  //ble application main loop
+  for (;;)
+  {
+    /* main loop for BleMain functionalities */
     {
-      ICall_EntityID dest;
-      ICall_ServiceEnum src;
-      ICall_HciExtEvt *pMsg = NULL;
+      uint32_t events;
 
-      // Fetch any available messages that might have been sent from the stack
-      if (ICall_fetchServiceMsg(&src, &dest,
-                                (void **)&pMsg) == ICALL_ERRNO_SUCCESS)
+      // Waits for an event to be posted associated with the calling thread.
+      // Note that an event associated with a thread is posted when a
+      // message is queued to the message receive queue of the thread
+
+      //Wei
+      mq_receive(syncEvent, (char*)&events, sizeof(uint32_t), NULL);
+      //events = Event_pend(syncEvent, Event_Id_NONE, SP_ALL_EVENTS,
+      //                    ICALL_TIMEOUT_FOREVER);
+
+      if (events)
       {
-        uint8 safeToDealloc = TRUE;
+        ICall_EntityID dest;
+        ICall_ServiceEnum src;
+        ICall_HciExtEvt *pMsg = NULL;
 
-        if ((src == ICALL_SERVICE_CLASS_BLE) && (dest == selfEntity))
+        // Fetch any available messages that might have been sent from the stack
+        if (ICall_fetchServiceMsg(&src, &dest,
+                                  (void **)&pMsg) == ICALL_ERRNO_SUCCESS)
         {
-          ICall_Stack_Event *pEvt = (ICall_Stack_Event *)pMsg;
+          uint8 safeToDealloc = TRUE;
 
-          // Check for BLE stack events first
-          if (pEvt->signature != 0xffff)
+          if ((src == ICALL_SERVICE_CLASS_BLE) && (dest == selfEntity))
           {
-            // Process inter-task message
-            safeToDealloc = SimplePeripheral_processStackMsg((ICall_Hdr *)pMsg);
+            ICall_Stack_Event *pEvt = (ICall_Stack_Event *)pMsg;
+
+            // Check for BLE stack events first
+            if (pEvt->signature != 0xffff)
+            {
+              // Process inter-task message
+              safeToDealloc = SimplePeripheral_processStackMsg((ICall_Hdr *)pMsg);
+            }
+          }
+
+          if (pMsg && safeToDealloc)
+          {
+            ICall_freeMsg(pMsg);
           }
         }
 
-        if (pMsg && safeToDealloc)
+        // If RTOS queue is not empty, process app message.
+        if (events & SP_QUEUE_EVT)
         {
-          ICall_freeMsg(pMsg);
-        }
-      }
+          //Wei
+          spEvt_t *pMsg;
+          do
+          {
+            pMsg = (spEvt_t *)Util_dequeueMsg(g_POSIX_appMsgQueue);
+            if (NULL != pMsg)
+            {
+              // Process message.
+              SimplePeripheral_processAppMsg(pMsg);
 
-      // If RTOS queue is not empty, process app message.
-      if (events & SP_QUEUE_EVT)
-      {
-		//Wei
-		spEvt_t *pMsg;
-          do {
-              pMsg = (spEvt_t *)Util_dequeueMsg(g_POSIX_appMsgQueue);
-              if (NULL != pMsg)
-              {
-                  // Process message.
-				SimplePeripheral_processAppMsg(pMsg);
+              // Free the space from the message.
+              ICall_free(pMsg);
+            }
+            else
+            {
+              break;
+            }
+          } while(1);
+#if 0
+          while (!Queue_empty(appMsgQueueHandle))
+          {
+            spEvt_t *pMsg = (spEvt_t *)Util_dequeueMsg(appMsgQueueHandle);
+            if (pMsg)
+            {
+              // Process message.
+              SimplePeripheral_processAppMsg(pMsg);
 
-                  // Free the space from the message.
-                  ICall_free(pMsg);
-              }
-              else
-              {
-                  break;
-              }
-          }while(1);
-        //while (!Queue_empty(appMsgQueueHandle))
-        //{
-        //  spEvt_t *pMsg = (spEvt_t *)Util_dequeueMsg(appMsgQueueHandle);
-        //  if (pMsg)
-        //  {
-            // Process message.
-         //   SimplePeripheral_processAppMsg(pMsg);
-
-            // Free the space from the message.
-         //   ICall_free(pMsg);
-         // }
+              // Free the space from the message.
+              ICall_free(pMsg);
+            }
+          }
+#endif
         }
       }
     }
@@ -2447,7 +2451,7 @@ static void bleStack_init(void)
   }
 
   // Initialize GATT Client
-  GATT_InitClient();
+  GATT_InitClient("");
 
   // Init key debouncer
   Board_initKeys(SimplePeripheral_keyChangeHandler);

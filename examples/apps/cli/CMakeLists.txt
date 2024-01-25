@@ -73,6 +73,12 @@ set(COMMON_SOURCES
     main.c
     #bleAppTask.c
     #bleStackMenu.c
+    app_main.c
+    app_data.c
+    app_pairing.c
+    app_peripheral.c
+    app_dev_info.c
+    app_simple_gatt.c
     osal_icall_ble.c
     ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack/common/cc26xx/freertos/bget.c
     ${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack/common/cc26xx/freertos/TI_heap_wrapper.c
@@ -82,7 +88,7 @@ set(COMMON_SOURCES
     #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/menu/two_btn_menu.c
     #${TI_SIMPLELINK_SDK_DIR}/source/ti/display/Display.c
     #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/common/cc26xx/board_key.c
-    #${TI_SIMPLELINK_SDK_DIR}/kernel/nortos/dpl/SystemP_nortos.c
+    ${TI_SIMPLELINK_SDK_DIR}/kernel/nortos/dpl/SystemP_nortos.c
     #${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack/common/cc26xx/freertos/bget.c
 )
 
@@ -125,6 +131,11 @@ set(USR_COMPILE_DEFINITIONS
 )
 
 set(APPEND CMAKE_C_FLAGS -std=c99)
+
+target_compile_options(openthread-cc13xx_cc26xx
+    PUBLIC
+        -O0
+)
 
 if(TI_SIMPLELINK_KERNEL STREQUAL "freertos")
     list(APPEND COMMON_SOURCES freertos_main.c)

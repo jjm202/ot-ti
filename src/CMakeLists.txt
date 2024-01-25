@@ -320,8 +320,13 @@ target_compile_definitions(openthread-cc13xx_cc26xx
 )
 
 target_compile_options(openthread-cc13xx_cc26xx
-    PRIVATE
+    PUBLIC
         ${OT_CFLAGS}       
+        @${CMAKE_CURRENT_BINARY_DIR}/syscfg/ti_ble_app_config.opt
+        @${CMAKE_CURRENT_BINARY_DIR}/syscfg/ti_build_config.opt
+        @${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/config/build_components.opt
+        @${TI_SIMPLELINK_SDK_DIR}/source/ti/ble5stack_flash/config/factory_config.opt
+        -O0
 )
 
 target_include_directories(openthread-cc13xx_cc26xx

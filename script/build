@@ -83,7 +83,7 @@ build()
         TICLANG_ARMCOMPILER=${TICLANG_ARMCOMPILER} \
         GENERATOR=Ninja
 
-    ${CMAKE} -GNinja -DOT_COMPILE_WARNING_AS_ERROR=ON "$@" "${OT_SRCDIR}" -B ${builddir}
+    ${CMAKE} -GNinja -DCMAKE_VERBOSE_MAKEFILE=ON -DOT_COMPILE_WARNING_AS_ERROR=ON "$@" "${OT_SRCDIR}" -B ${builddir}
 
     if [[ -n ${OT_CMAKE_NINJA_TARGET[*]} ]]; then
 	    ${CMAKE} --build ${builddir} "${OT_CMAKE_NINJA_TARGET[@]}"

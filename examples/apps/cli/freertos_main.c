@@ -68,6 +68,8 @@ static TaskHandle_t BLEAPPTaskHandle;
 #include <bget.h>
 #define TOTAL_ICALL_HEAP_SIZE (0xf700)
 
+extern void appMain(void);
+
 __attribute__((section(".heap"))) uint8_t ucHeap[TOTAL_ICALL_HEAP_SIZE];
 uint32_t heapSize = TOTAL_ICALL_HEAP_SIZE;
 
@@ -85,8 +87,14 @@ void vTaskCode(void *pvParameters)
     app_main(0, NULL);
 }
 
+void AssertHandler(uint8_t assertCause, uint8_t assertSubcause)
+{
+}
+
 int main(void)
 {
+    halAssertCback = AssertHandler;
+    RegisterAssertCback(AssertHandler);
     Board_init();
     bpool((void *) ucHeap, TOTAL_ICALL_HEAP_SIZE);
 
@@ -121,6 +129,7 @@ int main(void)
     }
 
     //bleAppTask_init();
+    appMain();
     vTaskStartScheduler();
 
     // Should never get here.
